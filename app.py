@@ -8,7 +8,25 @@ st.set_page_config(
     page_icon="🧴",
     layout="wide"
 )
+
 st.title("🧴 Sommelier du Parfum Iyaly")
+
+st.markdown("""
+<style>
+    .block-container {
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+    }
+</style>
+""", unsafe_allow_html=True)
+
+st.markdown("""
+Bienvenue dans **Iyaly – le sommelier du parfum**.
+
+Explorez notre collection à travers les familles olfactives, les notes de tête, de cœur et de fond.
+
+Laissez votre nez (et notre moteur de similarité) vous guider vers des fragrances cousines.
+""", unsafe_allow_html=True)
 
 query = st.query_params
 note_query = query.get("note", "")
@@ -102,9 +120,13 @@ if mode == "🔎 À partir d'un parfum":
                 break
 
 elif mode == "🎯 Par critères":
-    sexe_choisi = st.selectbox("Sexe", ["Tous"] + sorted(df["Sexe"].unique()))
-    famille_choisie = st.selectbox("Famille Olfactive Principale", [""] + sorted(df["Famille Olfactive Principale"].unique()))
-    facette_choisie = st.selectbox("Facette 1", [""] + sorted(df["Facette 1"].unique()))
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        sexe_choisi = st.selectbox("Sexe", ["Tous"] + sorted(df["Sexe"].unique()))
+    with col2:
+        famille_choisie = st.selectbox("Famille Olfactive Principale", [""] + sorted(df["Famille Olfactive Principale"].unique()))
+    with col3:
+        facette_choisie = st.selectbox("Facette 1", [""] + sorted(df["Facette 1"].unique()))
 
     notes_default = [forced_note] if forced_note else []
     notes_choisies = st.multiselect("Notes olfactives (1 à plusieurs)", options=notes_uniques, default=notes_default)
