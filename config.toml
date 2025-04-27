@@ -1,0 +1,21 @@
+ [theme]
+primaryColor = "#A26769"
+backgroundColor = "#FFF8F0"
+secondaryBackgroundColor = "#F3E9DC"
+textColor = "#3B3B3B"
+font = "sans serif"
+
+[server]
+headless = true
+
+[browser]
+gatherUsageStats = false
+
+[global]
+showWarningOnDirectExecution = false
+
+[client]
+toolbarMode = "minimal"
+
+[title]
+title = "🧴 Sommelier du Parfum Iyaly"
