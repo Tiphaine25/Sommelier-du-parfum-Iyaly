@@ -32,25 +32,10 @@ query = st.query_params
 note_query = query.get("note", "")
 
 df = pd.read_excel("base_parfums.xlsx")
-df.columns = df.columns.str.strip()
 df.fillna("", inplace=True)
-
-st.write("Colonnes détectées :", df.columns.tolist())
 
 if "Sexe" not in df.columns:
     df["Sexe"] = ""
-
-# Création d'une colonne d'affichage combinée pour la liste déroulante
-if all(col in df.columns for col in ["Référence", "Nom du Parfum", "Parfumeur"]):
-    st.success("✅ Colonnes correctes détectées pour l'affichage personnalisé")
-    df["Affichage"] = (
-        "[" + df["Référence"].astype(str) + "] " +
-        df["Nom du Parfum"].astype(str) + " – " +
-        df["Parfumeur"].astype(str)
-    )
-else:
-    st.warning("⚠️ Les colonnes 'Référence', 'Nom du Parfum' ou 'Parfumeur' sont absentes ou mal nommées.")
-    df["Affichage"] = df["Nom du Parfum"]
 
 df["Profil"] = (
     df["Famille Olfactive Principale"].astype(str) + " " +
@@ -83,10 +68,10 @@ forced_note = note_query if note_query in notes_uniques else ""
 mode = st.radio("Mode de recherche", ["🔎 À partir d'un parfum", "🎯 Par critères"], index=1 if forced_note else 0)
 
 if mode == "🔎 À partir d'un parfum":
-    parfum_selectionne = st.selectbox("Choisis un parfum", df["Affichage"])
+    parfum_selectionne = st.selectbox("Choisis un parfum", df["Intitulé"])
 
-    if parfum_selectionne in df["Affichage"].values:
-        idx = df[df["Affichage"] == parfum_selectionne].index[0]
+    if parfum_selectionne in df["Intitulé"].values:
+        idx = df[df["Intitulé"] == parfum_selectionne].index[0]
         parfum_ref = df.iloc[idx]
         sexe_ref = parfum_ref["Sexe"]
 
