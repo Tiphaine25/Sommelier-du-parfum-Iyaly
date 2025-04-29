@@ -1,9 +1,10 @@
  [theme]
-primaryColor = "#A26769"               # rose vieux/terre cuite
-backgroundColor = "#FFF8F0"            # crème
-secondaryBackgroundColor = "#F3E9DC"   # beige rosé
-textColor = "#3B3B3B"                  # anthracite doux
-font = "sans serif"
+base="light"
+primaryColor="#A3B18A"            # Vert amande doux
+backgroundColor="#F5F1E7"          # Beige crème très clair
+secondaryBackgroundColor="#E8E1D9" # Praliné léger
+textColor="#4B4637"                # Brun taupe pour un texte chaleureux
+font="serif"
 
 
 [server]
