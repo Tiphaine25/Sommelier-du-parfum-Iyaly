@@ -79,7 +79,15 @@ if mode == "🔎 À partir d'un parfum":
         scores = sorted(scores, key=lambda x: x[1], reverse=True)
 
         st.subheader("Suggestions similaires :")
-        st.markdown("🧠 **Astuce :** choisissez un parfum de la liste ci-dessus pour découvrir les autres fragrances qui lui ressemblent.\n\n\- 🟢 : nombreuses similitudes\n\- 🟠 : similitudes modérées\n\- 🔴 : quelques similitudes\n\nCliquez sur la flèche d'une suggestion pour voir ses facettes et ses notes olfactives.")
+        st.markdown("""
+🧠 **Astuce :** choisissez un parfum de la liste ci-dessus pour découvrir les autres fragrances qui lui ressemblent.
+
+🟢 : nombreuses similitudes  
+🟠 : similitudes modérées  
+🔴 : quelques similitudes  
+
+Cliquez sur la flèche d'une suggestion pour voir ses facettes et ses notes olfactives.
+""")
 
         suggestions_affichées = 0
         for i, (index, score) in enumerate(scores[1:]):
