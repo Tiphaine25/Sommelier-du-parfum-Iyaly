@@ -103,7 +103,7 @@ if mode == "🔎 À partir d'un parfum":
 
             barres = int(score * 10)
             barre_visuelle = "█" * barres + "░" * (10 - barres)
-            with st.expander(f"{couleur} `{score:.2f}` – {barre_visuelle} – {parfum['Nom du Parfum']} – {parfum['Marque']} ({parfum['Famille Olfactive Principale']})"):
+            with st.expander(f"{couleur} `{score:.2f}` – {barre_visuelle} – {parfum['Nom du Parfum']} ({parfum['Famille Olfactive Principale']})"):
                 st.markdown(f"**Facette 1 :** {parfum['Facette 1']}")
                 st.markdown(f"**Facette 2 :** {parfum['Facette 2']}")
                 for section, note1, note2 in [("Notes de Tête", "Notes de Tête 1", "Notes de Tête 2"),
