@@ -67,6 +67,8 @@ forced_note = note_query if note_query in notes_uniques else ""
 
 mode = st.radio("Mode de recherche", ["🔎 À partir d'un parfum", "🎯 Par critères"], index=1 if forced_note else 0)
 
+seuil_similarite = st.slider("Seuil minimal de similarité", 0.0, 1.0, 0.3, 0.05)
+
 if mode == "🔎 À partir d'un parfum":
     parfum_selectionne = st.selectbox("Choisis un parfum", df["Intitulé"])
 
@@ -92,29 +94,28 @@ if mode == "🔎 À partir d'un parfum":
             elif sexe_ref == "Femme" and parfum["Sexe"] not in ["Femme", "Mixte"]:
                 continue
 
-            if score > 0.5:
-                couleur = "🟢"
-            elif score > 0.3:
-                couleur = "🟠"
-            elif score > 0.1:
-                couleur = "🔴"
-            else:
-                continue
+            if score > seuil_similarite:
+                if score > 0.5:
+                    couleur = "🟢"
+                elif score > 0.3:
+                    couleur = "🟠"
+                else:
+                    couleur = "🔴"
 
-            barres = int(score * 10)
-            barre_visuelle = "█" * barres + "░" * (10 - barres)
-            with st.expander(f"{couleur} `{score:.2f}` – {barre_visuelle} – {parfum['Nom du Parfum']} ({parfum['Famille Olfactive Principale']})"):
-                st.markdown(f"**Facette 1 :** {parfum['Facette 1']}")
-                st.markdown(f"**Facette 2 :** {parfum['Facette 2']}")
-                for section, note1, note2 in [("Notes de Tête", "Notes de Tête 1", "Notes de Tête 2"),
-                                              ("Notes de Cœur", "Notes de Cœur 1", "Notes de Cœur 2"),
-                                              ("Notes de Fond", "Notes de Fond 1", "Notes de Fond 2")]:
-                    notes = []
-                    for col in [note1, note2]:
-                        note = parfum[col]
-                        if note:
-                            notes.append(f"[{note}](?note={note})")
-                    st.markdown(f"**{section} :** " + ", ".join(notes))
-            suggestions_affichées += 1
-            if suggestions_affichées >= 5:
-                break
+                barres = int(score * 10)
+                barre_visuelle = "█" * barres + "░" * (10 - barres)
+                with st.expander(f"{couleur} `{score:.2f}` – {barre_visuelle} – {parfum['Nom du Parfum']} ({parfum['Famille Olfactive Principale']})"):
+                    st.markdown(f"**Facette 1 :** {parfum['Facette 1']}")
+                    st.markdown(f"**Facette 2 :** {parfum['Facette 2']}")
+                    for section, note1, note2 in [("Notes de Tête", "Notes de Tête 1", "Notes de Tête 2"),
+                                                  ("Notes de Cœur", "Notes de Cœur 1", "Notes de Cœur 2"),
+                                                  ("Notes de Fond", "Notes de Fond 1", "Notes de Fond 2")]:
+                        notes = []
+                        for col in [note1, note2]:
+                            note = parfum[col]
+                            if note:
+                                notes.append(f"[{note}](?note={note})")
+                        st.markdown(f"**{section} :** " + ", ".join(notes))
+                suggestions_affichées += 1
+                if suggestions_affichées >= 5:
+                    break
