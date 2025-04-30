@@ -170,7 +170,7 @@ Cliquez sur la flèche à côté d’un parfum pour afficher ses notes et ses fa
 
         suggestions_affichées = 0
         for i in sorted_indices:
-            parfum = df.iloc[i]
+            parfum = df_resultat.iloc[i]
             score = scores[i]
 
             if score > 0.5:
