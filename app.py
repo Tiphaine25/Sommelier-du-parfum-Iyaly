@@ -126,3 +126,76 @@ Cliquez sur la flèche d'une suggestion pour voir ses facettes et ses notes olfa
             suggestions_affichées += 1
             if suggestions_affichées >= 5:
                 break
+
+elif mode == "🎯 Par critères":
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        sexe_choisi = st.selectbox("Sexe", ["Tous"] + sorted(df["Sexe"].unique()))
+    with col2:
+        famille_choisie = st.selectbox("Famille Olfactive Principale", [""] + sorted(df["Famille Olfactive Principale"].unique()))
+    with col3:
+        facette_choisie = st.selectbox("Facette 1", [""] + sorted(df["Facette 1"].unique()))
+
+    notes_default = [forced_note] if forced_note else []
+    notes_choisies = st.multiselect("Notes olfactives (1 à plusieurs)", options=notes_uniques, default=notes_default)
+
+    if forced_note:
+        st.markdown(f"🔍 **Parfums contenant : `{forced_note}`**")
+
+    df_resultat = df.copy()
+    if famille_choisie:
+        df_resultat = df_resultat[df_resultat["Famille Olfactive Principale"] == famille_choisie]
+    if facette_choisie:
+        df_resultat = df_resultat[df_resultat["Facette 1"] == facette_choisie]
+    if sexe_choisi != "Tous":
+        df_resultat = df_resultat[df_resultat["Sexe"] == sexe_choisi]
+    if notes_choisies:
+        df_resultat = df_resultat[df_resultat[note_columns].apply(lambda row: all(note in row.values for note in notes_choisies), axis=1)]
+
+    if not df_resultat.empty:
+        recherche_vect = vectorizer.transform(df_resultat["Profil"])
+        scores = cosine_similarity(recherche_vect, X)[0]
+        sorted_indices = scores.argsort()[::-1]
+
+        st.subheader("Parfums correspondant aux critères :")
+        st.markdown("""
+🧠 **Astuce :** sélectionnez des critères pour découvrir les parfums qui s’en rapprochent.
+
+🟢 : très grande proximité  
+🟠 : correspondance modérée  
+🔴 : points communs limités  
+
+Cliquez sur la flèche à côté d’un parfum pour afficher ses notes et ses facettes.
+""")
+
+        suggestions_affichées = 0
+        for i in sorted_indices:
+            parfum = df.iloc[i]
+            score = scores[i]
+
+            if score > 0.5:
+                couleur = "🟢"
+            elif score > 0.3:
+                couleur = "🟠"
+            elif score > 0.1:
+                couleur = "🔴"
+            else:
+                continue
+
+            barres = int(score * 10)
+            barre_visuelle = "█" * barres + "░" * (10 - barres)
+            with st.expander(f"{couleur} `{score:.2f}` – {barre_visuelle} – {parfum['Nom du Parfum']} ({parfum['Famille Olfactive Principale']})"):
+                st.markdown(f"**Facette 1 :** {parfum['Facette 1']}")
+                st.markdown(f"**Facette 2 :** {parfum['Facette 2']}")
+                for section, note1, note2 in [("Notes de Tête", "Notes de Tête 1", "Notes de Tête 2"),
+                                              ("Notes de Cœur", "Notes de Cœur 1", "Notes de Cœur 2"),
+                                              ("Notes de Fond", "Notes de Fond 1", "Notes de Fond 2")]:
+                    notes = []
+                    for col in [note1, note2]:
+                        note = parfum[col]
+                        if note:
+                            notes.append(f"[{note}](?note={note})")
+                    st.markdown(f"**{section} :** " + ", ".join(notes))
+            suggestions_affichées += 1
+            if suggestions_affichées >= 10:
+                break
