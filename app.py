@@ -154,7 +154,7 @@ elif mode == "🎯 Par critères":
 
     if not df_resultat.empty:
         recherche_vect = vectorizer.transform(df_resultat["Profil"])
-        scores = cosine_similarity(recherche_vect, X)[0]
+        scores = cosine_similarity(recherche_vect, vectorizer.transform(df_resultat["Profil"]))[0]
         sorted_indices = scores.argsort()[::-1]
 
         st.subheader("Parfums correspondant aux critères :")
