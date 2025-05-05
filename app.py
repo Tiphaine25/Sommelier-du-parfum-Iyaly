@@ -31,6 +31,12 @@ Laissez votre nez (et notre moteur de similarité) vous guider vers des fragranc
 query = st.query_params
 note_query = query.get("note", "")
 
+import os
+
+st.markdown("### 🔍 Fichiers présents dans le dossier :")
+st.code("
+".join(os.listdir(".")))
+
 df = pd.read_excel("base_parfums.xlsx")
 df.fillna("", inplace=True)
 
